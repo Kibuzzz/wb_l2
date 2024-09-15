@@ -1,6 +1,9 @@
 package pattern
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 /*
 	Реализовать паттерн «посетитель».
@@ -24,7 +27,7 @@ type Shape interface {
 }
 
 type Square struct {
-	side int
+	side float64
 }
 
 func (s *Square) accept(v Visitor) {
@@ -36,7 +39,7 @@ func (s *Square) getType() string {
 }
 
 type Circle struct {
-	radius int
+	radius float64
 }
 
 func (c *Circle) accept(v Visitor) {
@@ -53,15 +56,17 @@ type Visitor interface {
 }
 
 type AreaCalculator struct {
-	area int
+	area float64
 }
 
 func (a *AreaCalculator) visitForSquare(s *Square) {
 	// Calculate area for square.
 	// Then assign in to the area instance variable.
-	fmt.Println("Calculating area for square")
+	a.area = s.side * s.side
+	fmt.Println("Calculating area for square", a.area)
 }
 
 func (a *AreaCalculator) visitForCircle(s *Circle) {
-	fmt.Println("Calculating area for circle")
+	a.area = math.Pi * s.radius * s.radius
+	fmt.Println("Calculating area for circle", a.area)
 }
