@@ -66,7 +66,3 @@ func Unpack(input string) (string, error) {
 	result += string(runes[l-1])
 	return result, nil
 }
-
-func main() {
-
-}

@@ -31,7 +31,7 @@ func sortString(word string) string {
 	sort.Strings(s)
 	return strings.Join(s, "")
 }
-func anograms(words []string) map[string][]string {
+func Anograms(words []string) map[string][]string {
 	anograms := make(map[string][]string)
 	ind := make(map[string]string)
 	for _, word := range words {
@@ -50,5 +50,5 @@ func anograms(words []string) map[string][]string {
 func main() {
 	input := []string{"пятка", "пятак", "тяпка", "листок", "слиток", "столик"}
 
-	fmt.Println(anograms(input))
+	fmt.Println(Anograms(input))
 }
