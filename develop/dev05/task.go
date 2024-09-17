@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -39,14 +40,14 @@ type flags struct {
 }
 
 func main() {
-	after := flag.Int(`A`, 0, `"after" печатать +N строк после совпадения`)
-	before := flag.Int(`B`, 0, `-B - "before" печатать +N строк до совпадения`)
-	context := flag.Int(`C`, 0, `-C - "context" (A+B) печатать ±N строк вокруг совпадения`)
-	count := flag.Bool(`c`, false, `-c - "count" (количество строк)`)
-	ignoreCase := flag.Bool(`i`, false, `-i - "ignore-case" (игнорировать регистр)`)
-	invert := flag.Bool(`v`, false, `-v - "invert" (вместо совпадения, исключать)`)
-	fixed := flag.Bool(`F`, false, `-F - "fixed", точное совпадение со строкой, не паттерн`)
-	lineNum := flag.Bool(`n`, false, `-n - "line num", печатать номер строки`)
+	after := flag.Int("A", 0, `"after" печатать +N строк после совпадения`)
+	before := flag.Int("B", 0, `-B - "before" печатать +N строк до совпадения`)
+	context := flag.Int("C", 0, `-C - "context" (A+B) печатать ±N строк вокруг совпадения`)
+	count := flag.Bool("c", false, `-c - "count" (количество строк)`)
+	ignoreCase := flag.Bool("i", false, `-i - "ignore-case" (игнорировать регистр)`)
+	invert := flag.Bool("v", false, `-v - "invert" (вместо совпадения, исключать)`)
+	fixed := flag.Bool("F", false, `-F - "fixed", точное совпадение со строкой, не паттерн`)
+	lineNum := flag.Bool("n", false, `-n - "line num", печатать номер строки`)
 
 	flag.Parse()
 
@@ -61,21 +62,41 @@ func main() {
 		lineNum:    *lineNum,
 	}
 
-	if *after < 0 {
+	switch {
+	case *after < 0:
 		log.Fatal("after flag should be >= 0")
+	case *before < 0:
+		log.Fatal("before flag should be >= 0")
+	case *context < 0:
+		log.Fatal("context flag should be >= 0")
 	}
 
 	// Чтение аргументов командной строки
 	pattern := flag.Arg(0)
 	fileName := flag.Arg(1)
 
+	if pattern == "" || fileName == "" {
+		log.Fatal("Необходимо указать шаблон поиска и имя файла")
+	}
+
+	// Открываем файл
 	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatalf("failed to open file %s\n", err.Error())
+		log.Fatalf("Не удалось открыть файл %s: %v", fileName, err)
 	}
-	file.Close()
+	defer file.Close()
 
-	lines := []string{}
+	// Чтение файла построчно
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("Ошибка чтения файла: %v", err)
+	}
+
 	Grep(lines, pattern, flags)
 }
 
