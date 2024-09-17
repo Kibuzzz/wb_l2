@@ -1,0 +1,11 @@
+Hello world
+This is a simple test file
+The quick brown fox jumps over the lazy dog
+Grep is a powerful tool for searching text
+We will test regex matching and plain text searching
+Regular expressions can be complex
+Here is a line with a number: 12345
+Another line with special characters: !@#$%^&*()
+Test case with a newline
+
+Test case with multiple words: grep test
