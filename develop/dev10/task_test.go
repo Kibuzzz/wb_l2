@@ -56,7 +56,7 @@ func TestTelnet(t *testing.T) {
 	telnetInput := bytes.NewBufferString(testMsg1)
 	telnetOutput := &bytes.Buffer{}
 
-	telnet(addr, telnetInput, telnetOutput)
+	telnet(addr, 10, telnetInput, telnetOutput)
 
 	// Проверка, что до сервера доходят правильные сообщения
 	if server.input.String() != testMsg1 {
